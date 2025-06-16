@@ -1,0 +1,54 @@
+---
+title: "HA_cancer_data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(shiny)
+library(plotly)
+library(magick)
+```
+
+First we load annual cancer incidence rate and mortality rate from HA open data
+
+```{r rjson}
+carinc_list <- rjson::fromJSON(file = "https://www3.ha.org.hk/cancereg/datagovhk/HKCaR-incidence-EN.json")
+carinc_df <- as.data.frame(do.call(rbind, carinc_list))
+
+carmor_list <- rjson::fromJSON(file = "https://www3.ha.org.hk/cancereg/datagovhk/HKCaR-mortality-EN.json")
+carmor_df <- as.data.frame(do.call(rbind, carmor_list))
+
+cancer_df <- merge(carinc_df, carmor_df, by = c("Year", "Sex"))
+cancer_df[colnames(cancer_df)[-2]] <- cancer_df[colnames(cancer_df)[-2]] %>% apply(MARGIN = c(1, 2), FUN = as.numeric) # unlist numeric elements
+cancer_df[colnames(cancer_df)[2]] <- lapply(cancer_df[colnames(cancer_df)[2]], FUN = as.character) # unlist char elements
+head(cancer_df,5)
+```
+
+Interative chart to visualize change of cancer incidence rate by gender
+- play button to play the chart in standard speed
+- scrollbar allows focus on specific year
+
+```{r plotly, echo=FALSE}
+
+colourCount <- length(unique(cancer_df$Sex))
+# assign color palette to each Sex
+dict_color <- if (colourCount %% 2 == 0) { append(rep(c('#C21E56', '#01B0F1'),colourCount/2), '#AAAAAA') } else {
+  append( rep(c('#C21E56', '#01B0F1'),floor(colourCount/2)), c('#C21E56', '#AAAAAA') )}
+
+# transform data frame to fit plot
+df_plotly <- cancer_df %>% pivot_longer(cols = c(Age_standardized_incidence_rate, Age_standardized_mortality_rate))
+df_plotly['name'] <- lapply(df_plotly['name'], FUN = function(y) gsub('Age_standardized_', '', y)) # shorten variable label
+
+# interactive plot by plotly
+p <- plot_ly(data = df_plotly, x = ~value, y = ~name, frame = ~Year, type = 'bar',
+             color = ~factor(Sex), colors = dict_color[1:colourCount], legendgroup = ~Sex,
+            orientation = 'h') %>%
+  layout(title = 'Cancer incidence/mortality rate from 1983-2022 (Age standardized)',
+         xaxis = list(title = 'Rate'),
+         yaxis = list(title = '')) %>%
+  animation_opts(frame = 800)
+p
+```
+
+
