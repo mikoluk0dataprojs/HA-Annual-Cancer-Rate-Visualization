@@ -1,6 +1,6 @@
 ---
 title: "HA_cancer_data"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
