@@ -1,6 +1,8 @@
 # HA-Annual-Cancer-Rate-Visualization
 
-<b>Full project in HA_cancer_data.Rmd</b>
+<b>Full code in HA_cancer_data.Rmd</b>
+
+<b>Please visit [https://mikoluk0dataprojs.github.io/HA-Annual-Cancer-Rate-Visualization/](https://mikoluk0dataprojs.github.io/HA-Annual-Cancer-Rate-Visualization/) to view the chart</b>
 
 Data Visualization of Statistics on Cancer from Hospital Authority (HA)
 - HA releases statistics on cancer annaualy
