@@ -6,7 +6,6 @@
 
 Data Visualization of Statistics on Cancer from Hospital Authority (HA)
 - HA releases statistics on cancer annaualy
-- In this project we visualize data in animated chart to give a more intuitive picture on trends
+- In this project we visualize data in animated chart to give a picture focusing on rate of changes
 
-Data Source:
-- Data source: https://data.gov.hk/en-data/dataset/hospital-hkcardata-cancer-stat
+Data source: https://data.gov.hk/en-data/dataset/hospital-hkcardata-cancer-stat
